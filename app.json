@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "taxi-app",
+    "slug": "taxi-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/applogo.jpg",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/applogo.jpg",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/applogo.jpg"
+    }
+  }
+}
