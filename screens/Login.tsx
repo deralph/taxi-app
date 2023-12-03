@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView, View, Text, Image, TextInput } from "react-native";
 import Button from "../components/Button";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import fetchData from "../components/fetchData";
 
-export default function Onboard() {
+export default function Login() {
+  const [matricNumber, setMatricNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
   const navigation = useNavigation<any>();
+
+  const handleLogin = { key: "value" };
+  fetchData<{ key: string }>("http://localhost:5000/api/v1/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ matricNumber, password }),
+  })
+    .then((data) => {
+      console.log("POST Data:", data);
+      navigation.navigate("Main");
+    })
+    .catch((error) => {
+      console.error("POST Error:", error);
+      setError(true);
+    });
   return (
     <SafeAreaView
       style={{
@@ -29,12 +47,25 @@ export default function Onboard() {
       >
         <Image source={require("../assets/logo.png")} />
       </View>
+
+      {error ? (
+        <Text
+          style={{
+            color: "#f00",
+            fontSize: 16,
+            marginVertical: 10,
+            textAlign: "center",
+          }}
+        >
+          Incorrect password or Matric number
+        </Text>
+      ) : null}
+
       <TextInput
         placeholderTextColor={"#fff"}
         placeholder="Matric No."
         selectionColor="#fff "
         style={{
-          // fontFamily: "Matric Number",
           fontSize: 16,
           borderColor: "#fff",
           borderWidth: 2,
@@ -47,13 +78,14 @@ export default function Onboard() {
           marginTop: "20%",
           fontWeight: "600",
         }}
+        value={matricNumber}
+        onChange={(value) => setMatricNumber(value.nativeEvent.text)}
       />
       <TextInput
         placeholderTextColor={"#fff"}
         placeholder="Password"
         selectionColor="#fff"
         style={{
-          // fontFamily: "poppins",
           fontSize: 16,
           borderColor: "#fff",
           borderWidth: 2,
@@ -66,12 +98,14 @@ export default function Onboard() {
           fontWeight: "600",
           marginTop: "10%",
         }}
+        value={password}
+        onChange={(value) => setPassword(value.nativeEvent.text)}
       />
 
       <View style={{ marginTop: "40%" }}>
         <Button
           onPress={() => {
-            navigation.navigate("Main");
+            handleLogin;
           }}
           text="Login"
           color="#000"

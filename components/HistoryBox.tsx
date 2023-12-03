@@ -2,7 +2,14 @@ import React from "react";
 import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-function HistoryBox() {
+export type ride = {
+  matricNumber?: string;
+  location: string | any;
+  price: number;
+  createdAt: string;
+};
+
+function HistoryBox({ location, price, createdAt }: ride) {
   return (
     <View
       style={{
@@ -20,7 +27,7 @@ function HistoryBox() {
             <Ionicons name="location" size={24} color="#8F00FF" /> Location :
           </Text>
           <Text style={{ color: "#929292", fontSize: 14, fontWeight: "500" }}>
-            Senate Building
+            {location}
           </Text>
         </View>
         <View>
@@ -28,12 +35,12 @@ function HistoryBox() {
             Price
           </Text>
           <Text style={{ color: "#929292", fontSize: 14, fontWeight: "500" }}>
-            #50
+            #{price}
           </Text>
         </View>
       </View>
       <Text style={{ marginTop: "2%", color: "#bbb", fontSize: 12 }}>
-        28/11/2023
+        {createdAt}
       </Text>
     </View>
   );

@@ -1,19 +1,17 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
-import Button from "./Button";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { loc } from "./data";
 
-export default function Location() {
+export default function Location({ location, price, time }: loc) {
   const navigation = useNavigation<any>();
   return (
     <View
       style={{
         paddingVertical: 14,
         paddingHorizontal: 16,
-        // alignItems: "center",
         gap: 12,
-        // backgroundColor: "#F4F3F3",
         flexBasis: "49%",
         marginVertical: 10,
         borderRadius: 16,
@@ -23,13 +21,13 @@ export default function Location() {
       }}
     >
       <Text style={{ color: "#151513", fontWeight: "600", fontSize: 16 }}>
-        Senate Building
+        {location}
       </Text>
       <Text style={{ color: "#929292", fontSize: 12, fontWeight: "500" }}>
-        20 min
+        {time}
       </Text>
       <Text style={{ color: "#000", fontSize: 12, fontWeight: "700" }}>
-        #50
+        {price}
       </Text>
       <Pressable
         style={{

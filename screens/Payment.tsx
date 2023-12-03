@@ -1,9 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Paystack } from "react-native-paystack-webview";
+import fetchData from "../components/fetchData";
 
 export default function Payment() {
   const navigation = useNavigation<any>();
+
+  const [amount, setAmount] = useState("");
+  const [pay, setPay] = useState(false);
+
+  const makePayment = (res: any) => {
+    const postData = {
+      matricNumber: "1234",
+      amount,
+      ...res.data,
+    };
+    fetchData<{ key: string }>(
+      "http://localhost:3000/api/v1/payment/123/payment",
+      {
+        method: "POST",
+        body: JSON.stringify(postData),
+      }
+    )
+      .then((data) => {
+        console.log("POST Data:", data);
+      })
+      .catch((error) => {
+        console.error("POST Error:", error);
+      });
+  };
+
   return (
     <View style={{ padding: "5%" }}>
       <Text style={{ fontSize: 24, fontWeight: "600", marginVertical: "5%" }}>
@@ -18,18 +45,19 @@ export default function Payment() {
           marginTop: "10%",
         }}
       >
-        Card Number
+        Enter Amount
       </Text>
       <TextInput
         placeholderTextColor={"#ACACAC"}
-        placeholder="1234 5678 9101 1121"
+        placeholder="#50 - #10000"
         selectionColor="#fff "
+        keyboardType="numeric"
         style={{
           fontSize: 16,
           borderColor: "#ACACAC",
           borderWidth: 2,
           borderStyle: "solid",
-          color: "#fff",
+          color: "#ACACAC",
           borderRadius: 10,
           height: 60,
           paddingLeft: 20,
@@ -37,88 +65,46 @@ export default function Payment() {
           marginBottom: 20,
           fontWeight: "600",
         }}
+        value={amount}
+        onChange={(value) => setAmount(value.nativeEvent.text)}
       />
-      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <View style={{ flex: 0.45 }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "500",
-              color: "#0A0D13",
-              marginBottom: 10,
-            }}
-          >
-            Expiration Date
-          </Text>
-          <TextInput
-            placeholderTextColor={"#ACACAC"}
-            placeholder="MM/YY"
-            selectionColor="#fff "
-            style={{
-              fontSize: 16,
-              borderColor: "#ACACAC",
-              borderWidth: 2,
-              borderStyle: "solid",
-              color: "#fff",
-              borderRadius: 10,
-              height: 60,
-              paddingLeft: 20,
-              width: "100%",
-              marginBottom: 20,
-              fontWeight: "600",
-            }}
-          />
-        </View>
-        <View style={{ flex: 0.45 }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "500",
-              color: "#0A0D13",
-              marginBottom: 10,
-            }}
-          >
-            CVV
-          </Text>
-          <TextInput
-            placeholderTextColor={"#ACACAC"}
-            placeholder="123"
-            selectionColor="#fff "
-            style={{
-              fontSize: 16,
-              borderColor: "#ACACAC",
-              borderWidth: 2,
-              borderStyle: "solid",
-              color: "#fff",
-              borderRadius: 10,
-              height: 60,
-              paddingLeft: 20,
-              width: "100%",
-              marginBottom: 20,
-              fontWeight: "600",
-            }}
-          />
-        </View>
-      </View>
-      <Pressable
-        onPress={() => {
-          navigation.navigate("Ticket");
+      <Text
+        style={{
+          backgroundColor: "#8F00FF",
+          textAlign: "center",
+          fontSize: 20,
+          fontWeight: "600",
+          color: "#fff",
+          padding: "5%",
+          borderRadius: 10,
         }}
+        onPress={() => setPay(true)}
       >
-        <Text
-          style={{
-            backgroundColor: "#8F00FF",
-            textAlign: "center",
-            fontSize: 20,
-            fontWeight: 600,
-            color: "#fff",
-            padding: "5%",
-            borderRadius: 10,
+        Pay #{amount}
+      </Text>
+      {pay ? (
+        <Paystack
+          paystackKey="pk_test_62ba3fa4e30ace38c25feca74eae65646f1cf095"
+          amount={amount}
+          billingEmail="paystackwebview@something.com"
+          activityIndicatorColor="#8F00FF"
+          onCancel={(e) => {
+            // handle response here
+            setPay(false);
+            navigation.navigate("Main");
           }}
-        >
-          Pay #50
-        </Text>
-      </Pressable>
+          onSuccess={(res) => {
+            // handle response here
+            setPay(false);
+            console.log(res);
+            if (res.data.event === "successful") {
+              makePayment(res);
+              navigation.navigate("Profile");
+            }
+          }}
+          autoStart={true}
+        />
+      ) : null}
     </View>
   );
 }

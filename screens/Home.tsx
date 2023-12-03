@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Button from "../components/Button";
 import Location from "../components/Location";
+import { locations } from "../components/data";
 
 export default function Home() {
   return (
@@ -35,10 +36,10 @@ export default function Home() {
           justifyContent: "space-evenly",
         }}
         // numColumns={2}
-        data={[0, 1, 2, 3, 4, 5, 6, 0, 1, 2, 3, 4, 5, 6]}
-        renderItem={() => (
+        data={locations}
+        renderItem={({ item }) => (
           <View style={{ paddingHorizontal: 10 }}>
-            <Location />
+            <Location {...item} />
           </View>
         )}
       />
