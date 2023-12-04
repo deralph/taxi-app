@@ -6,7 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.ts\"",
+    "devStart": " ts-node-dev index.ts"
   },
   "keywords": [],
   "author": "",
@@ -18,13 +19,12 @@
     "express-async-errors": "^3.1.1",
     "http-status-codes": "^2.3.0",
     "mongoose": "^8.0.2",
-    "stripe": "^14.7.0"
+    "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.1",
-    "concurrently": "^8.2.2",
     "nodemon": "^3.0.2",
     "typescript": "^5.3.2"
   }

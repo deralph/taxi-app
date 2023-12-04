@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import fetchData from "../components/fetchData";
+import fetcher from "../components/fetchData";
 
 type profileType = {
   name: string;
@@ -13,23 +14,44 @@ type profileType = {
 
 export default function Profile() {
   const [profile, setProfile] = useState<profileType>();
-  const getProfile = () => {
-    fetchData<{ key: string }>("http://localhost:3000/api/v1/auth/1234", {
-      method: "GET",
-    })
-      .then((data: any) => {
-        setProfile(data.user);
+  const [message, setMessage] = React.useState("");
+  const [data, setData] = React.useState<any>();
+
+  const getProfile = async () => {
+    try {
+      await fetcher(
+        "http://192.168.43.193:5000/api/v1/auth/1234",
+        "GET",
+        setMessage,
+        setData
+      );
+      if (data) {
+        setData(data.user);
         console.log("GET Data:", data);
-      })
-      .catch((error) => {
-        console.error("GET Error:", error);
-      });
+      }
+    } catch (message) {
+      console.log("an message occured");
+      console.error("GET message:", message);
+    }
   };
+
   useEffect(() => {
     getProfile();
   }, [getProfile]);
   return (
     <View style={{ flex: 1, backgroundColor: "#8F00FF", alignItems: "center" }}>
+      {message ? (
+        <Text
+          style={{
+            color: "#f00",
+            fontSize: 16,
+            marginVertical: 10,
+            textAlign: "center",
+          }}
+        >
+          {message}
+        </Text>
+      ) : null}
       <View
         style={{
           backgroundColor: "#fff",

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Unauthorized from "../error/unauthorized";
 import user from "../model/user";
 
-const getPayments = async (req: Request, res: Response) => {
+const paymentMiddleware = async (req: Request, res: Response) => {
   const {
     params: { matricNumber },
     body,
@@ -21,4 +21,4 @@ const getPayments = async (req: Request, res: Response) => {
   }
 };
 
-export default getPayments;
+export default paymentMiddleware;

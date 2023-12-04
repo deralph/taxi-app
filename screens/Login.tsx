@@ -4,26 +4,30 @@ import Button from "../components/Button";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import fetchData from "../components/fetchData";
+import fetcher from "../components/fetchData";
 
 export default function Login() {
   const [matricNumber, setMatricNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  // const [error, setError] = useState("");
+  const [message, setMessage] = React.useState("");
+  const [data, setData] = React.useState<any>();
   const navigation = useNavigation<any>();
 
-  const handleLogin = { key: "value" };
-  fetchData<{ key: string }>("http://localhost:5000/api/v1/auth/login", {
-    method: "POST",
-    body: JSON.stringify({ matricNumber, password }),
-  })
-    .then((data) => {
-      console.log("POST Data:", data);
+  const handleLogin = async () => {
+    try {
+      await fetcher(
+        "http://192.168.43.193:5000/api/v1/auth/login",
+        "POST",
+        setMessage,
+        setData,
+        { matricNumber, password }
+      );
       navigation.navigate("Main");
-    })
-    .catch((error) => {
-      console.error("POST Error:", error);
-      setError(true);
-    });
+    } catch (error) {
+      console.log("an error occured");
+    }
+  };
   return (
     <SafeAreaView
       style={{
@@ -31,7 +35,6 @@ export default function Login() {
         flex: 1,
         padding: "5%",
         alignItems: "center",
-        // justifyContent: "space-evenly",
       }}
     >
       <View
@@ -48,7 +51,7 @@ export default function Login() {
         <Image source={require("../assets/logo.png")} />
       </View>
 
-      {error ? (
+      {message ? (
         <Text
           style={{
             color: "#f00",
@@ -57,14 +60,14 @@ export default function Login() {
             textAlign: "center",
           }}
         >
-          Incorrect password or Matric number
+          {message}
         </Text>
       ) : null}
 
       <TextInput
         placeholderTextColor={"#fff"}
         placeholder="Matric No."
-        selectionColor="#fff "
+        selectionColor="#ffffff "
         style={{
           fontSize: 16,
           borderColor: "#fff",
@@ -84,7 +87,7 @@ export default function Login() {
       <TextInput
         placeholderTextColor={"#fff"}
         placeholder="Password"
-        selectionColor="#fff"
+        selectionColor="#ffffff"
         style={{
           fontSize: 16,
           borderColor: "#fff",
@@ -104,9 +107,7 @@ export default function Login() {
 
       <View style={{ marginTop: "40%" }}>
         <Button
-          onPress={() => {
-            handleLogin;
-          }}
+          onPress={handleLogin}
           text="Login"
           color="#000"
           bgColor="#fff"

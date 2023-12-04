@@ -14,7 +14,9 @@ const app: Express = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-
+app.get("/", (req: Request, res: Response) => {
+  res.json({ data: "this is an home page" });
+});
 app.use("/api/v1/auth", authRouter);
 // app.use("/api/v1/payment", paymentMiddleware, paymentRouter);
 app.use("/api/v1/payment", paymentRouter);

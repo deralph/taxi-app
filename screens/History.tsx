@@ -2,26 +2,29 @@ import React, { useState, useEffect } from "react";
 import { View, Text, FlatList } from "react-native";
 import HistoryBox, { ride } from "../components/HistoryBox";
 import fetchData from "../components/fetchData";
+import fetcher from "../components/fetchData";
 
 export default function History() {
-  const [data, setData] = useState<ride[]>([]);
-  const [error, setError] = useState(false);
-  const getData = () => {
-    fetchData<{ key: string }>(
-      "http://localhost:3000/api/v1/payment/123/getRide",
-      {
-        method: "GET",
-      }
-    )
-      .then((data: any) => {
-        console.log("GET Data:", data);
+  const [data, setData] = useState<any>([]);
+  const [message, setMessage] = React.useState("");
+  const getData = async () => {
+    try {
+      await fetcher(
+        "http://192.168.43.193:5000/api/v1/payment/123/getRide",
+        "GET",
+        setMessage,
+        setData
+      );
+      if (data) {
         setData(data.Payments);
-      })
-      .catch((error) => {
-        console.error("GET Error:", error);
-        setError(true);
-      });
+        // navigation.navigate("Main");
+      }
+    } catch (message) {
+      console.log("an message occured");
+      console.error("GET message:", message);
+    }
   };
+
   useEffect(() => {
     getData();
   }, [getData]);
@@ -36,7 +39,7 @@ export default function History() {
         </Text>
       ) : null}
 
-      {error ? (
+      {message ? (
         <Text
           style={{
             color: "#f00",
@@ -45,7 +48,7 @@ export default function History() {
             textAlign: "center",
           }}
         >
-          Incorrect password or Matric number
+          {message}
         </Text>
       ) : null}
       <FlatList

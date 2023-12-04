@@ -3,6 +3,7 @@ import { View, Text, TextInput, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Paystack } from "react-native-paystack-webview";
 import fetchData from "../components/fetchData";
+import fetcher from "../components/fetchData";
 
 export default function Payment() {
   const navigation = useNavigation<any>();
@@ -10,25 +11,29 @@ export default function Payment() {
   const [amount, setAmount] = useState("");
   const [pay, setPay] = useState(false);
 
-  const makePayment = (res: any) => {
-    const postData = {
-      matricNumber: "1234",
-      amount,
-      ...res.data,
-    };
-    fetchData<{ key: string }>(
-      "http://localhost:3000/api/v1/payment/123/payment",
-      {
-        method: "POST",
-        body: JSON.stringify(postData),
+  const [message, setMessage] = React.useState("");
+  const [data, setData] = React.useState<any>();
+
+  const makePayment = async (res: any) => {
+    try {
+      const postData = {
+        matricNumber: "1234",
+        amount,
+        ...res.data,
+      };
+      await fetcher(
+        "http://192.168.43.193:5000/api/v1/payment/123/payment",
+        "POST",
+        setMessage,
+        setData,
+        postData
+      );
+      if (data) {
+        navigation.navigate("Main");
       }
-    )
-      .then((data) => {
-        console.log("POST Data:", data);
-      })
-      .catch((error) => {
-        console.error("POST Error:", error);
-      });
+    } catch (error) {
+      console.log("an error occured");
+    }
   };
 
   return (

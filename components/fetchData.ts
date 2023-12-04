@@ -1,68 +1,37 @@
-import { Platform } from "react-native";
-
-interface RequestOptions {
-  method: "GET" | "POST";
-  body?: string | FormData;
-  headers?: Record<string, string>;
-}
-
-async function fetchData<T>(url: string, options: RequestOptions): Promise<T> {
+const fetcher = async (
+  url: string,
+  method: string,
+  setMessage: React.Dispatch<React.SetStateAction<string>>,
+  setData: any,
+  fetchData?: any
+) => {
   try {
-    const defaultHeaders = {
-      "Content-Type": "application/json",
-      // Add any other headers you need
-    };
-
-    const headers = {
-      ...defaultHeaders,
-      ...options.headers,
-    };
-
-    const fetchOptions: RequestInit = {
-      method: options.method,
-      headers,
-      body: options.body,
-    };
-
-    const response = await fetch(url, fetchOptions);
-
-    if (!response.ok) {
-      throw new Error(`Request failed with status: ${response.status}`);
+    const response: any = await fetch(url, {
+      method: method,
+      body: fetchData ? JSON.stringify(fetchData) : null,
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    const data = await response.json();
+    setMessage("");
+    console.log("hello");
+    console.log("Response Data:", data);
+    if (!data) {
+      setMessage("No data available, An error occured, Try again");
     }
-
-    const data: T = await response.json();
-    return data;
+    if (data?.type == "error" || data?.success == "error") {
+      setMessage(data.message);
+    }
+    if (data) {
+      console.log("hi");
+      setData(data);
+    }
   } catch (error) {
-    console.error("Fetch Error:", error);
-    throw error;
+    setMessage("An error occured, Try again");
+    console.log("Error in fetching");
+    console.log("Error : ", error);
   }
-}
-
-// Example usage:
-
-// GET request
-fetchData<{ key: string }>("https://example.com/api/data", { method: "GET" })
-  .then((data) => {
-    console.log("GET Data:", data);
-  })
-  .catch((error) => {
-    console.error("GET Error:", error);
-  });
-
-// POST request
-const postData = { key: "value" };
-fetchData<{ key: string }>("https://example.com/api/data", {
-  method: "POST",
-  body: JSON.stringify(postData),
-  headers: {
-    Authorization: "Bearer YOUR_ACCESS_TOKEN",
-  },
-})
-  .then((data) => {
-    console.log("POST Data:", data);
-  })
-  .catch((error) => {
-    console.error("POST Error:", error);
-  });
-
-export default fetchData;
+  return;
+};
+export default fetcher;

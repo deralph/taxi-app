@@ -14,7 +14,7 @@ export interface rideModel extends ride {
   findOne: (email: string) => any;
 }
 
-const userSchema: Schema<rideModel> = new Schema({
+const rideSchema: Schema<rideModel> = new Schema({
   matricNumber: {
     type: String,
     required: true,
@@ -37,11 +37,11 @@ const userSchema: Schema<rideModel> = new Schema({
   },
 });
 
-userSchema.methods.createUser = async function (body: ride) {
+rideSchema.methods.createUser = async function (body: ride) {
   return await this.create(body);
 };
-userSchema.methods.findOne = async function (matricNumber: string) {
+rideSchema.methods.findOne = async function (matricNumber: string) {
   return await this.find({ matricNumber });
 };
 
-export default model("Users", userSchema);
+export default model("ride", rideSchema);
