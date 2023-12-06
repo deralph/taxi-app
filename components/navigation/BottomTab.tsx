@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Platform, View } from "react-native";
-import Animated, { FadeInLeft, FadeOut } from "react-native-reanimated";
+import { Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import History from "../../screens/History";
 import Profile from "../../screens/Profile";
 import HomeStackNavigation from "./HomeStackNavigation";
+import Payment from "../../screens/Payment";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 export default function BottomTabs() {
@@ -47,6 +48,20 @@ export default function BottomTabs() {
           headerShown: false,
           tabBarIcon: (props: any) => (
             <FontAwesome5 name="history" size={24} color="#8F00FF" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Fund"
+        component={Payment}
+        options={{
+          headerShown: false,
+          tabBarIcon: (props: any) => (
+            <MaterialCommunityIcons
+              name="credit-card-refund"
+              size={24}
+              color="#8F00FF"
+            />
           ),
         }}
       />

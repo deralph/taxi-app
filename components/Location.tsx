@@ -41,7 +41,9 @@ export default function Location({ location, price, time }: loc) {
           alignItems: "center",
           justifyContent: "center",
         }}
-        onPress={() => navigation.navigate("Payment")}
+        onPress={() =>
+          navigation.navigate("Ticket", { data: { location, price } })
+        }
       >
         <Text
           style={{

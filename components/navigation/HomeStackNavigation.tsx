@@ -33,11 +33,7 @@ export default function HomeStackNavigation() {
           }
         }
       />
-      <NativeStack.Screen
-        // options={{ headerShown: false }}
-        name="Payment"
-        component={Payment}
-      />
+
       <NativeStack.Screen
         // options={{ headerShown: false }}
         name="Ticket"

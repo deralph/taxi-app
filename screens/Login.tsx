@@ -3,15 +3,15 @@ import { SafeAreaView, View, Text, Image, TextInput } from "react-native";
 import Button from "../components/Button";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import fetchData from "../components/fetchData";
 import fetcher from "../components/fetchData";
+import { save } from "../storage";
 
 export default function Login() {
   const [matricNumber, setMatricNumber] = useState("");
   const [password, setPassword] = useState("");
   // const [error, setError] = useState("");
   const [message, setMessage] = React.useState("");
-  const [data, setData] = React.useState<any>();
+  const [data, setData] = React.useState<any>([]);
   const navigation = useNavigation<any>();
 
   const handleLogin = async () => {
@@ -22,8 +22,10 @@ export default function Login() {
         setMessage,
         setData,
         { matricNumber, password }
-      );
-      navigation.navigate("Main");
+      ).then(() => {
+        save("user", data.user);
+        navigation.navigate("Main");
+      });
     } catch (error) {
       console.log("an error occured");
     }

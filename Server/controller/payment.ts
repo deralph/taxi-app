@@ -120,6 +120,7 @@ const makeRide = async (req: Request, res: Response) => {
     res.json({ error: e.message });
   }
 };
+
 const getRide = async (req: Request, res: Response) => {
   const {
     params: { matricNumber },
@@ -143,10 +144,10 @@ const getRide = async (req: Request, res: Response) => {
     res
       .status(StatusCodes.ACCEPTED)
 
-      .json({ matricNumber: User.matricNumber, isPosted: true, sucess: true });
+      .json({ ride: getRide, sucess: true });
   } catch (e: any) {
     console.log(e.message);
-    res.json({ error: e.message });
+    res.json({ error: e.message, sucess: false });
   }
 };
 

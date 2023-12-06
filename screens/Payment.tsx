@@ -27,10 +27,11 @@ export default function Payment() {
         setMessage,
         setData,
         postData
-      );
-      if (data) {
-        navigation.navigate("Main");
-      }
+      ).then(() => {
+        if (data) {
+          navigation.navigate("Main");
+        }
+      });
     } catch (error) {
       console.log("an error occured");
     }

@@ -35,7 +35,7 @@ const login = async (req: Request, res: Response) => {
   res
     .status(StatusCodes.ACCEPTED)
 
-    .json({ matricNumber: user.matricNumber, isPosted: true, sucess: true });
+    .json({ user, isPosted: true, sucess: true });
 };
 
 const logout = async (req: Request, res: Response) => {

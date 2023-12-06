@@ -3,14 +3,29 @@ import { View, Text, FlatList } from "react-native";
 import HistoryBox, { ride } from "../components/HistoryBox";
 import fetchData from "../components/fetchData";
 import fetcher from "../components/fetchData";
+import { getValueFor } from "../storage";
+
+type User = {
+  name: string;
+  course: string;
+  matricNumber: string;
+  password: string | any;
+  walletPrice: number;
+  createdAt: string;
+};
 
 export default function History() {
   const [data, setData] = useState<any>([]);
+  const [user, setUser] = useState<any>();
   const [message, setMessage] = React.useState("");
   const getData = async () => {
     try {
+      await getValueFor("user").then((data) => {
+        console.log(data);
+        setUser(data);
+      });
       await fetcher(
-        "http://192.168.43.193:5000/api/v1/payment/123/getRide",
+        `http://192.168.43.193:5000/api/v1/payment/${user.matricNumber}/getRide`,
         "GET",
         setMessage,
         setData
@@ -27,6 +42,7 @@ export default function History() {
 
   useEffect(() => {
     getData();
+    console.log(user);
   }, [getData]);
   return (
     <View style={{ padding: "5%" }}>
@@ -51,18 +67,20 @@ export default function History() {
           {message}
         </Text>
       ) : null}
-      <FlatList
-        contentContainerStyle={{
-          marginVertical: "2%",
-        }}
-        // numColumns={2}
-        data={data}
-        renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: 10 }}>
-            <HistoryBox {...item} />
-          </View>
-        )}
-      />
+      {data ? (
+        <FlatList
+          contentContainerStyle={{
+            marginVertical: "2%",
+          }}
+          // numColumns={2}
+          data={data}
+          renderItem={({ item }) => (
+            <View style={{ paddingHorizontal: 10 }}>
+              <HistoryBox {...item} />
+            </View>
+          )}
+        />
+      ) : null}
     </View>
   );
 }
