@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, Image, TextInput } from "react-native";
 import Button from "../components/Button";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import fetcher from "../components/fetchData";
-import { save } from "../storage";
+import { getValueFor, save } from "../storage";
 
 export default function Login() {
   const [matricNumber, setMatricNumber] = useState("");
@@ -14,6 +14,22 @@ export default function Login() {
   const [data, setData] = React.useState<any>([]);
   const navigation = useNavigation<any>();
 
+  const getUser = async () => {
+    try {
+      await getValueFor("user").then(async (userData: any) => {
+        console.log(JSON.parse(userData));
+        console.log(JSON.parse(userData).matricNumber);
+        console.log("something above");
+        if (JSON.parse(userData).matricNumber) {
+          navigation.navigate("Main");
+        }
+      });
+    } catch (message) {
+      console.log("an message occured");
+      console.error("GET user:", message);
+    }
+    return null;
+  };
   const handleLogin = async () => {
     try {
       await fetcher(
@@ -23,13 +39,16 @@ export default function Login() {
         setData,
         { matricNumber, password }
       ).then(() => {
-        save("user", data.user);
+        save("user", JSON.stringify(data.user));
         navigation.navigate("Main");
       });
     } catch (error) {
       console.log("an error occured");
     }
   };
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
   return (
     <SafeAreaView
       style={{
@@ -69,7 +88,7 @@ export default function Login() {
       <TextInput
         placeholderTextColor={"#fff"}
         placeholder="Matric No."
-        selectionColor="#ffffff "
+        selectionColor="rgb(255, 255, 255) "
         style={{
           fontSize: 16,
           borderColor: "#fff",
@@ -89,7 +108,7 @@ export default function Login() {
       <TextInput
         placeholderTextColor={"#fff"}
         placeholder="Password"
-        selectionColor="#ffffff"
+        selectionColor="rgb(255, 255, 255)"
         style={{
           fontSize: 16,
           borderColor: "#fff",

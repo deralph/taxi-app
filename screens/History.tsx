@@ -16,40 +16,46 @@ type User = {
 
 export default function History() {
   const [data, setData] = useState<any>([]);
-  const [user, setUser] = useState<any>();
   const [message, setMessage] = React.useState("");
   const getData = async () => {
     try {
-      await getValueFor("user").then((data) => {
-        console.log(data);
-        setUser(data);
+      await getValueFor("user").then(async (userData: any) => {
+        console.log("hi");
+        console.log(JSON.parse(userData));
+        console.log(JSON.parse(userData).matricNumber);
+        console.log("something above");
+        try {
+          await fetcher(
+            `http://192.168.43.193:5000/api/v1/payment/${
+              JSON.parse(userData).matricNumber
+            }/getRide`,
+            "GET",
+            setMessage,
+            setData
+          );
+          if (data) {
+            setData(data.ride);
+            // navigation.navigate("Main");
+          }
+        } catch (error) {
+          console.log("error in fetching from server", error);
+        }
       });
-      await fetcher(
-        `http://192.168.43.193:5000/api/v1/payment/${user.matricNumber}/getRide`,
-        "GET",
-        setMessage,
-        setData
-      );
-      if (data) {
-        setData(data.Payments);
-        // navigation.navigate("Main");
-      }
     } catch (message) {
       console.log("an message occured");
-      console.error("GET message:", message);
+      console.error("GET user:", message);
     }
   };
 
   useEffect(() => {
     getData();
-    console.log(user);
-  }, [getData]);
+  }, []);
   return (
     <View style={{ padding: "5%" }}>
       <Text style={{ fontSize: 24, fontWeight: "600", marginVertical: "5%" }}>
         History
       </Text>
-      {data.length < 1 ? (
+      {data?.length < 1 ? (
         <Text style={{ fontSize: 16, fontWeight: "500", marginVertical: "5%" }}>
           No available history
         </Text>

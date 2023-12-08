@@ -24,7 +24,7 @@ const fetcher = async (
       setMessage(data.message);
     }
     if (data) {
-      console.log("hi");
+      console.log("hi", data);
       setData(data);
     }
   } catch (error) {

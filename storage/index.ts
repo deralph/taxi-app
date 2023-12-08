@@ -1,7 +1,10 @@
 import * as SecureStore from "expo-secure-store";
+import error from "../Server/error";
 
 export async function save(key: any, value: any) {
-  await SecureStore.setItemAsync(key, value);
+  await SecureStore.setItemAsync(key, value)
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
 }
 
 export async function getValueFor(key: any) {
@@ -11,4 +14,5 @@ export async function getValueFor(key: any) {
   } else {
     alert("No values stored under that key.");
   }
+  return result;
 }

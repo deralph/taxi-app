@@ -30,7 +30,9 @@ const login = async (req: Request, res: Response) => {
   const checkPassword = user.checkPassword(password);
   console.log(checkPassword);
 
-  if (!checkPassword) throw new Unauthorized("invalid credentials");
+  if (!checkPassword) {
+    throw new Unauthorized("invalid credentials");
+  }
 
   res
     .status(StatusCodes.ACCEPTED)

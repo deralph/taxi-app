@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import fetcher from "../components/fetchData";
 import Button from "../components/Button";
+import { getValueFor } from "../storage";
 
 export default function TicketDidplay({ route }: any) {
   const { location, price } = route.params?.data || null;
@@ -12,29 +13,42 @@ export default function TicketDidplay({ route }: any) {
   const [data, setData] = React.useState<any>([]);
   const navigation = useNavigation<any>();
 
-  // ride {
-  //   matricNumber: string;
-  //   location: string | any;
-  //   price: number;
-  //   createdAt?: Date;
-  // }
-  const postData = {
-    matricNumber: "1234",
-    location,
-    price,
-  };
-
   const handleRide = async () => {
     try {
-      await fetcher(
-        "http://192.168.43.193:5000/api/v1/payment/1234/ride",
-        "POST",
-        setMessage,
-        setData,
-        postData
-      ).then(() => navigation.navigate("homeScreen"));
-    } catch (error) {
-      console.log("an error occured");
+      await getValueFor("user").then(async (userData: any) => {
+        console.log("hi");
+        console.log(JSON.parse(userData));
+        console.log(JSON.parse(userData).matricNumber);
+        console.log("something above");
+        if (price > JSON.parse(userData).walletPrice) {
+          setMessage(
+            "Insufficent funds, Kindly fund your wallet and try again"
+          );
+          navigation.navigate("Fund");
+        }
+        try {
+          await fetcher(
+            `http://192.168.43.193:5000/api/v1/payment/${
+              JSON.parse(userData).matricNumber
+            }/ride`,
+            "POST",
+            setMessage,
+            setData,
+            {
+              matricNumber: "1234",
+              location,
+              price,
+            }
+          ).then(() => {
+            navigation.navigate("homeScreen");
+          });
+        } catch (error) {
+          console.log("error in fetching from server - ticket", error);
+        }
+      });
+    } catch (message) {
+      console.log("an message occured");
+      console.error("GET user:", message);
     }
   };
 
@@ -71,37 +85,30 @@ export default function TicketDidplay({ route }: any) {
         <Text
           style={{ fontWeight: "700", fontSize: 25, marginVertical: "10%" }}
         >
-          Ticket Purchase Successful
+          Ticket Purchase
         </Text>
         <Text style={{ fontWeight: "500", fontSize: 16, textAlign: "center" }}>
-          Kindly check the bus station to go with your desired vehicle
+          Kindly check the bus station to go with your desired vehicle aafter
+          this puchase
         </Text>
-        <Text style={{ marginTop: 20 }}>Location : Senate Building</Text>
-        <Text style={{ marginTop: 20 }}>Order No. : 1234</Text>
-        <Text style={{ marginTop: 20 }}>status : Paid</Text>
-        <Text style={{ marginTop: 20 }}>Amount : #50</Text>
+        <Text style={{ marginTop: 20 }}>Location : {location}</Text>
+        {/* <Text style={{ marginTop: 20 }}>Order No. : 1234</Text> */}
+        {/* <Text style={{ marginTop: 20 }}>status : Paid</Text> */}
+        <Text style={{ marginTop: 20, marginBottom: 40 }}>
+          Amount : #{price}
+        </Text>
+        <View>
+          <Button
+            onPress={() => {
+              handleRide();
+            }}
+            bgColor="#8F00FF"
+            color="#fff"
+            text="Confirm Ride"
+            fontSize={20}
+          />
+        </View>
       </View>
-      <Pressable onPress={() => handleRide}>
-        <Text
-          style={{
-            color: "#8F00FF",
-            textDecorationLine: "underline",
-            textAlign: "center",
-            marginTop: "10%",
-            fontWeight: "600",
-            fontSize: 16,
-          }}
-        >
-          Confirm Ride
-        </Text>
-        <Button
-          onPress={handleRide}
-          bgColor="#8F00FF"
-          color="#fff"
-          text="Confirm Ride"
-          fontSize={20}
-        />
-      </Pressable>
     </View>
   );
 }

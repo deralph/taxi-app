@@ -56,7 +56,7 @@ export default function Payment() {
       <TextInput
         placeholderTextColor={"#ACACAC"}
         placeholder="#50 - #10000"
-        selectionColor="#fff "
+        selectionColor="rgb(255, 255, 255) "
         keyboardType="numeric"
         style={{
           fontSize: 16,

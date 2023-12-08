@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import fetchData from "../components/fetchData";
 import fetcher from "../components/fetchData";
+import { getValueFor } from "../storage";
+import { useNavigation } from "@react-navigation/native";
 
 type profileType = {
   name: string;
@@ -13,31 +15,44 @@ type profileType = {
 };
 
 export default function Profile() {
+  const navigation = useNavigation<any>();
   const [profile, setProfile] = useState<profileType>();
   const [message, setMessage] = React.useState("");
   const [data, setData] = React.useState<any>();
 
   const getProfile = async () => {
     try {
-      await fetcher(
-        "http://192.168.43.193:5000/api/v1/auth/1234",
-        "GET",
-        setMessage,
-        setData
-      );
-      if (data) {
-        setData(data.user);
-        console.log("GET Data:", data);
-      }
+      await getValueFor("user").then(async (userData: any) => {
+        console.log("hi");
+        console.log(JSON.parse(userData));
+        console.log(JSON.parse(userData).matricNumber);
+        console.log("something above");
+
+        try {
+          await fetcher(
+            `http://192.168.43.193:5000/api/v1/auth/${
+              JSON.parse(userData).matricNumber
+            }`,
+            "GET",
+            setMessage,
+            setData
+          ).then(() => {
+            setData(data.user);
+            console.log("GET Data:", data);
+          });
+        } catch (error) {
+          console.log("error in fetching from server - ticket", error);
+        }
+      });
     } catch (message) {
       console.log("an message occured");
-      console.error("GET message:", message);
+      console.error("GET user:", message);
     }
   };
 
   useEffect(() => {
     getProfile();
-  }, [getProfile]);
+  }, []);
   return (
     <View style={{ flex: 1, backgroundColor: "#8F00FF", alignItems: "center" }}>
       {message ? (
@@ -80,7 +95,7 @@ export default function Profile() {
               Name :
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {profile?.name}
+              {data?.name}
             </Text>
           </View>
           <View
@@ -94,7 +109,7 @@ export default function Profile() {
               Course :
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {profile?.course}
+              {data?.course}
             </Text>
           </View>
           <View
@@ -108,7 +123,7 @@ export default function Profile() {
               Matric No. :
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {profile?.matricNumber}
+              {data?.matricNumber}
             </Text>
           </View>
           <View
@@ -122,7 +137,7 @@ export default function Profile() {
               Wallet Price :
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {profile?.walletPrice}
+              {data?.walletPrice}
             </Text>
           </View>
         </View>

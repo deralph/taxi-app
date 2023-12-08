@@ -144,7 +144,7 @@ const getRide = async (req: Request, res: Response) => {
     res
       .status(StatusCodes.ACCEPTED)
 
-      .json({ ride: getRide, sucess: true });
+      .json({ ride: Ride, sucess: true });
   } catch (e: any) {
     console.log(e.message);
     res.json({ error: e.message, sucess: false });
