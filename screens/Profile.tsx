@@ -30,10 +30,10 @@ export default function Profile() {
       console.log(JSON.parse(paul!));
       console.log(JSON.parse(paul!).phone);
       console.log("something above");
-
+      const p = JSON.parse(paul!).phone;
       try {
         await fetcher(
-          `http://192.168.43.193:5000/api/v1/auth/${JSON.parse(paul!).phone}`,
+          `http://192.168.43.193:5000/api/v1/auth/${p}`,
           "GET",
           setMessage,
           setData
