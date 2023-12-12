@@ -44,10 +44,12 @@ export default function Profile() {
         });
       } catch (error) {
         console.log("error in fetching from server - ticket", error);
+        setLoading(false);
       }
     } catch (message) {
       console.log("an message occured");
       console.error("GET user:", message);
+      setLoading(false);
     }
   };
 

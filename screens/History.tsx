@@ -20,29 +20,26 @@ export default function History() {
   const [loading, setLoading] = React.useState(true);
   const getData = async () => {
     try {
-      await getValueFor("user").then(async (userData: any) => {
-        console.log("hi");
-        console.log(JSON.parse(userData));
-        console.log(JSON.parse(userData).phone);
-        console.log("something above");
-        try {
-          await fetcher(
-            `http://192.168.43.193:5000/api/v1/payment/${
-              JSON.parse(userData).phone
-            }/getRide`,
-            "GET",
-            setMessage,
-            setData
-          );
-          if (data) {
-            setData(data.ride);
-            setLoading(false);
-            // navigation.navigate("Main");
-          }
-        } catch (error) {
-          console.log("error in fetching from server", error);
+      const paul = await getValueFor("user");
+      console.log("hi");
+      console.log(paul);
+      console.log("something above");
+      const p = JSON.parse(paul!).phone;
+      try {
+        await fetcher(
+          `http://192.168.43.193:5000/api/v1/payment/${p}/getRide`,
+          "GET",
+          setMessage,
+          setData
+        );
+        if (data) {
+          setData(data.ride);
+          setLoading(false);
+          // navigation.navigate("Main");
         }
-      });
+      } catch (error) {
+        console.log("error in fetching from server", error);
+      }
     } catch (message) {
       console.log("an message occured");
       console.error("GET user:", message);
