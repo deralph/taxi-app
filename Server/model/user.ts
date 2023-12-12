@@ -3,9 +3,7 @@ import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface Iuser {
-  name: string;
-  course: string;
-  matricNumber: string;
+  phone: string;
   password: string | any;
   walletPrice: number;
   createdAt: Date;
@@ -19,7 +17,7 @@ export interface IuserModel extends Iuser {
 }
 
 const userSchema: Schema<IuserModel> = new Schema({
-  matricNumber: {
+  phone: {
     type: String,
     required: true,
     trim: true,
@@ -54,8 +52,8 @@ userSchema.methods.checkPassword = async function (comparedPassword: string) {
 userSchema.methods.createUser = async function (body: Iuser) {
   return await this.create(body);
 };
-userSchema.methods.findOne = async function (matricNumber: string) {
-  return await this.find({ matricNumber });
+userSchema.methods.findOne = async function (phone: string) {
+  return await this.find({ phone });
 };
 
 export default model("Users", userSchema);

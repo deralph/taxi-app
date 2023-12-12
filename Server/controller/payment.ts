@@ -7,15 +7,15 @@ import ride from "../model/ride";
 
 const controlPayment = async (req: Request, res: Response) => {
   const {
-    params: { matricNumber },
+    params: { phone },
     body,
   } = req;
-  if (matricNumber !== body.matricNumber) {
+  if (phone !== body.phone) {
     throw new Unauthorized("Matric number doesn't match");
   }
 
   try {
-    const User = await user.findOne({ matricNumber });
+    const User = await user.findOne({ phone });
     console.log(User);
 
     if (!User) {
@@ -29,7 +29,7 @@ const controlPayment = async (req: Request, res: Response) => {
     }
     const walletPrice = Number(User.walletPrice) + Number(payment.amount);
     const updatedWalletPrice = await user.findOneAndUpdate(
-      { matricNumber },
+      { phone },
       { walletPrice },
       { new: true, runValidators: true }
     );
@@ -40,7 +40,7 @@ const controlPayment = async (req: Request, res: Response) => {
     res
       .status(StatusCodes.ACCEPTED)
 
-      .json({ matricNumber: User.matricNumber, isPosted: true, sucess: true });
+      .json({ phone: User.phone, isPosted: true, sucess: true });
   } catch (e: any) {
     console.log(e.message);
     res.json({ error: e.message });
@@ -49,11 +49,11 @@ const controlPayment = async (req: Request, res: Response) => {
 
 const getPayments = async (req: Request, res: Response) => {
   const {
-    params: { matricNumber },
+    params: { phone },
   } = req;
 
   try {
-    const User = await user.findOne({ matricNumber });
+    const User = await user.findOne({ phone });
     console.log(User);
 
     if (!User) {
@@ -61,7 +61,7 @@ const getPayments = async (req: Request, res: Response) => {
         "User not found, Check Matric Number and try again"
       );
     }
-    const Payments = await user.findOne({ matricNumber });
+    const Payments = await user.findOne({ phone });
     if (!Payments)
       throw new Unauthorized("couldn't find payments, kindly try again");
 
@@ -69,7 +69,7 @@ const getPayments = async (req: Request, res: Response) => {
       .status(StatusCodes.ACCEPTED)
 
       .json({
-        matricNumber: User.matricNumber,
+        phone: User.phone,
         Payments,
         isPosted: true,
         sucess: true,
@@ -81,15 +81,15 @@ const getPayments = async (req: Request, res: Response) => {
 };
 const makeRide = async (req: Request, res: Response) => {
   const {
-    params: { matricNumber },
+    params: { phone },
     body,
   } = req;
-  if (matricNumber !== body.matricNumber) {
+  if (phone !== body.phone) {
     throw new Unauthorized("Matric number doesn't match");
   }
 
   try {
-    const User = await user.findOne({ matricNumber });
+    const User = await user.findOne({ phone });
     console.log(User);
 
     if (!User) {
@@ -99,7 +99,7 @@ const makeRide = async (req: Request, res: Response) => {
     }
     const walletPrice = Number(User.walletPrice) - Number(req.body.amount);
     const updatedWalletPrice = await user.findOneAndUpdate(
-      { matricNumber },
+      { phone },
       { walletPrice },
       { new: true, runValidators: true }
     );
@@ -114,7 +114,7 @@ const makeRide = async (req: Request, res: Response) => {
     res
       .status(StatusCodes.ACCEPTED)
 
-      .json({ matricNumber: User.matricNumber, isPosted: true, sucess: true });
+      .json({ phone: User.phone, isPosted: true, sucess: true });
   } catch (e: any) {
     console.log(e.message);
     res.json({ error: e.message });
@@ -123,11 +123,11 @@ const makeRide = async (req: Request, res: Response) => {
 
 const getRide = async (req: Request, res: Response) => {
   const {
-    params: { matricNumber },
+    params: { phone },
   } = req;
 
   try {
-    const User = await user.findOne({ matricNumber });
+    const User = await user.findOne({ phone });
     console.log(User);
 
     if (!User) {
@@ -136,7 +136,7 @@ const getRide = async (req: Request, res: Response) => {
       );
     }
 
-    const Ride = await ride.find({ matricNumber });
+    const Ride = await ride.find({ phone });
     if (!Ride) {
       throw new Unauthorized("Unable to get ride details");
     }

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, Pressable } from "react-native";
-import fetchData from "../components/fetchData";
 import fetcher from "../components/fetchData";
-import { getValueFor } from "../storage";
+import { deleteValueFor, getValueFor } from "../storage";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
 
 type profileType = {
   name: string;
   course: string;
-  matricNumber: string;
+  phone: string;
   password: string | any;
   walletPrice: number;
   createdAt: Date;
@@ -18,32 +18,33 @@ export default function Profile() {
   const navigation = useNavigation<any>();
   const [profile, setProfile] = useState<profileType>();
   const [message, setMessage] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
+
   const [data, setData] = React.useState<any>();
 
   const getProfile = async () => {
     try {
-      await getValueFor("user").then(async (userData: any) => {
-        console.log("hi");
-        console.log(JSON.parse(userData));
-        console.log(JSON.parse(userData).matricNumber);
-        console.log("something above");
+      const paul = await getValueFor("user");
+      console.log("hi from profile");
+      console.log(paul);
+      console.log(JSON.parse(paul!));
+      console.log(JSON.parse(paul!).phone);
+      console.log("something above");
 
-        try {
-          await fetcher(
-            `http://192.168.43.193:5000/api/v1/auth/${
-              JSON.parse(userData).matricNumber
-            }`,
-            "GET",
-            setMessage,
-            setData
-          ).then(() => {
-            setData(data.user);
-            console.log("GET Data:", data);
-          });
-        } catch (error) {
-          console.log("error in fetching from server - ticket", error);
-        }
-      });
+      try {
+        await fetcher(
+          `http://192.168.43.193:5000/api/v1/auth/${JSON.parse(paul!).phone}`,
+          "GET",
+          setMessage,
+          setData
+        ).then(() => {
+          setData(data.user);
+          console.log("GET Data:", data);
+          setLoading(false);
+        });
+      } catch (error) {
+        console.log("error in fetching from server - ticket", error);
+      }
     } catch (message) {
       console.log("an message occured");
       console.error("GET user:", message);
@@ -92,38 +93,10 @@ export default function Profile() {
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: "600", marginRight: 20 }}>
-              Name :
+              Phone No. :
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {data?.name}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 20,
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: "600", marginRight: 20 }}>
-              Course :
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {data?.course}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 20,
-            }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: "600", marginRight: 20 }}>
-              Matric No. :
-            </Text>
-            <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {data?.matricNumber}
+              {loading ? "loading" : data?.phone}
             </Text>
           </View>
           <View
@@ -137,27 +110,55 @@ export default function Profile() {
               Wallet Price :
             </Text>
             <Text style={{ fontSize: 20, fontWeight: "500" }}>
-              {data?.walletPrice}
+              {loading ? "loading" : data?.walletPrice}
             </Text>
           </View>
         </View>
-        <Pressable
+        <Text
           onPress={() => {
-            // navigation.navigate("Ticket");
+            navigation.navigate("History");
+          }}
+          style={{
+            backgroundColor: "#8F00FF",
+            textAlign: "center",
+            fontSize: 20,
+            fontWeight: "600",
+            color: "#fff",
+            padding: "5%",
+            borderRadius: 10,
           }}
         >
+          View History
+        </Text>
+        <Pressable
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            position: "absolute",
+            right: 30,
+            top: 30,
+          }}
+          onPress={() => {
+            deleteValueFor("user")
+              .then(() => {
+                navigation.navigate("Login");
+              })
+              .catch((error) => {
+                console.log("error in loggin out");
+                console.log(error);
+              });
+          }}
+        >
+          <FontAwesome name="power-off" size={24} color="black" />
           <Text
             style={{
-              backgroundColor: "#8F00FF",
-              textAlign: "center",
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: "600",
-              color: "#fff",
-              padding: "5%",
-              borderRadius: 10,
+
+              marginLeft: 10,
             }}
           >
-            Sponsor Project
+            Log Out
           </Text>
         </Pressable>
       </View>

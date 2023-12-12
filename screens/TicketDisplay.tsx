@@ -18,7 +18,7 @@ export default function TicketDidplay({ route }: any) {
       await getValueFor("user").then(async (userData: any) => {
         console.log("hi");
         console.log(JSON.parse(userData));
-        console.log(JSON.parse(userData).matricNumber);
+        console.log(JSON.parse(userData).phone);
         console.log("something above");
         if (price > JSON.parse(userData).walletPrice) {
           setMessage(
@@ -29,13 +29,13 @@ export default function TicketDidplay({ route }: any) {
         try {
           await fetcher(
             `http://192.168.43.193:5000/api/v1/payment/${
-              JSON.parse(userData).matricNumber
+              JSON.parse(userData).phone
             }/ride`,
             "POST",
             setMessage,
             setData,
             {
-              matricNumber: "1234",
+              phone: "1234",
               location,
               price,
             }

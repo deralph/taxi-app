@@ -31,11 +31,11 @@ export default function Home() {
       <FlatList
         contentContainerStyle={{
           marginVertical: "2%",
-          flexDirection: "row",
-          flexWrap: "wrap",
+          flexDirection: "column",
           justifyContent: "space-evenly",
+          paddingBottom: 20,
         }}
-        // numColumns={2}
+        numColumns={2}
         data={locations}
         renderItem={({ item }) => (
           <View style={{ paddingHorizontal: 10 }}>

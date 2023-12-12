@@ -21,8 +21,8 @@ function Header() {
         onPress={() => navigation.goBack()}
       />
       <Image
-        source={require("../assets/logo.png")}
-        style={{ height: 40, objectFit: "contain", marginLeft: "30%" }}
+        source={require("../assets/logo.jpg")}
+        style={{ height: 40, marginLeft: "30%" }}
       />
     </View>
   );

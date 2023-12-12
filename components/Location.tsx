@@ -12,7 +12,7 @@ export default function Location({ location, price, time }: loc) {
         paddingVertical: 14,
         paddingHorizontal: 16,
         gap: 12,
-        flexBasis: "49%",
+        minWidth: "47%",
         marginVertical: 10,
         borderRadius: 16,
         borderWidth: 1,

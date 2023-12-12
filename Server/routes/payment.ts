@@ -4,9 +4,9 @@ import route from "../controller/payment";
 
 const { controlPayment, getPayments, makeRide, getRide } = route;
 
-PaymentRouter.post("/:matricNumber/payment", controlPayment);
-PaymentRouter.get("/:matricNumber/getPayment", getPayments);
-PaymentRouter.post("/:matricNumber/ride", makeRide);
-PaymentRouter.get("/:matricNumber/getRide", getRide);
+PaymentRouter.post("/:phone/payment", controlPayment);
+PaymentRouter.get("/:phone/getPayment", getPayments);
+PaymentRouter.post("/:phone/ride", makeRide);
+PaymentRouter.get("/:phone/getRide", getRide);
 
 export default PaymentRouter;

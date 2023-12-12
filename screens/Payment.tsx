@@ -17,7 +17,7 @@ export default function Payment() {
   const makePayment = async (res: any) => {
     try {
       const postData = {
-        matricNumber: "1234",
+        phone: "1234",
         amount,
         ...res.data,
       };

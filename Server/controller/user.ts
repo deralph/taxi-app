@@ -6,23 +6,23 @@ import { Request, Response } from "express";
 
 const register = async (req: Request, res: Response) => {
   const user = await User.create(req.body);
-  if (!user) throw new Unauthorized("matricNumber already exist");
+  if (!user) throw new Unauthorized("phone already exist");
 
   res
     .status(StatusCodes.ACCEPTED)
 
-    .json({ matricNumber: user.matricNumber, isPosted: true, sucess: true });
+    .json({ phone: user.phone, isPosted: true, sucess: true });
 };
 
 const login = async (req: Request, res: Response) => {
-  const { matricNumber, password }: Iuser = req.body;
-  console.log({ matricNumber, password });
+  const { phone, password }: Iuser = req.body;
+  console.log({ phone, password });
 
-  if (!matricNumber || !password) {
+  if (!phone || !password) {
     console.log("it happened here");
     throw new BadRequest("email and password can't be vacant");
   }
-  const user = await User.findOne({ matricNumber });
+  const user = await User.findOne({ phone });
   console.log(user);
 
   if (!user) throw new Unauthorized("invalid credentials");
@@ -49,14 +49,14 @@ const logout = async (req: Request, res: Response) => {
 
 const getUser = async (req: Request, res: Response) => {
   const {
-    params: { matricNumber },
+    params: { phone },
   } = req;
-  console.log({ matricNumber });
+  console.log({ phone });
 
-  if (!matricNumber) {
+  if (!phone) {
     throw new BadRequest("matric Number not present");
   }
-  const user = await User.findOne({ matricNumber });
+  const user = await User.findOne({ phone });
   console.log(user);
 
   if (!user) throw new Unauthorized("invalid credentials");

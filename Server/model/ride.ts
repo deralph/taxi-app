@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 export interface ride {
-  matricNumber: string;
+  phone: string;
   location: string | any;
   price: number;
   createdAt?: Date;
@@ -15,11 +15,10 @@ export interface rideModel extends ride {
 }
 
 const rideSchema: Schema<rideModel> = new Schema({
-  matricNumber: {
+  phone: {
     type: String,
     required: true,
     trim: true,
-    unique: true,
   },
 
   location: {
@@ -40,8 +39,8 @@ const rideSchema: Schema<rideModel> = new Schema({
 rideSchema.methods.createUser = async function (body: ride) {
   return await this.create(body);
 };
-rideSchema.methods.findOne = async function (matricNumber: string) {
-  return await this.find({ matricNumber });
+rideSchema.methods.findOne = async function (phone: string) {
+  return await this.find({ phone });
 };
 
 export default model("ride", rideSchema);

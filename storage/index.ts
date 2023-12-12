@@ -1,18 +1,31 @@
 import * as SecureStore from "expo-secure-store";
-import error from "../Server/error";
 
 export async function save(key: any, value: any) {
-  await SecureStore.setItemAsync(key, value)
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
+  console.log("value =", value);
+  await SecureStore.setItemAsync(key, value).catch((error) =>
+    console.log("error in storing user", error)
+  );
 }
 
 export async function getValueFor(key: any) {
-  let result = await SecureStore.getItemAsync(key);
-  if (result) {
-    alert("🔐 Here's your value 🔐 \n" + result);
-  } else {
-    alert("No values stored under that key.");
-  }
+  let result = await SecureStore.getItemAsync(key)
+    .then((data) => {
+      // console.log(data);
+      // if (data) {
+      //   alert("🔐 Here's your value 🔐 \n" + data);
+      // } else {
+      //   alert("No values stored under that key.");
+      // }
+      console.log("user =", data);
+      return data;
+    })
+    .catch((error) => {
+      console.log("error in getting user :", error);
+    });
   return result;
+}
+
+export async function deleteValueFor(key: any) {
+  let result = await SecureStore.deleteItemAsync(key);
+  console.log(result);
 }

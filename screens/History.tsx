@@ -8,7 +8,7 @@ import { getValueFor } from "../storage";
 type User = {
   name: string;
   course: string;
-  matricNumber: string;
+  phone: string;
   password: string | any;
   walletPrice: number;
   createdAt: string;
@@ -17,17 +17,18 @@ type User = {
 export default function History() {
   const [data, setData] = useState<any>([]);
   const [message, setMessage] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
   const getData = async () => {
     try {
       await getValueFor("user").then(async (userData: any) => {
         console.log("hi");
         console.log(JSON.parse(userData));
-        console.log(JSON.parse(userData).matricNumber);
+        console.log(JSON.parse(userData).phone);
         console.log("something above");
         try {
           await fetcher(
             `http://192.168.43.193:5000/api/v1/payment/${
-              JSON.parse(userData).matricNumber
+              JSON.parse(userData).phone
             }/getRide`,
             "GET",
             setMessage,
@@ -35,6 +36,7 @@ export default function History() {
           );
           if (data) {
             setData(data.ride);
+            setLoading(false);
             // navigation.navigate("Main");
           }
         } catch (error) {
@@ -55,12 +57,7 @@ export default function History() {
       <Text style={{ fontSize: 24, fontWeight: "600", marginVertical: "5%" }}>
         History
       </Text>
-      {data?.length < 1 ? (
-        <Text style={{ fontSize: 16, fontWeight: "500", marginVertical: "5%" }}>
-          No available history
-        </Text>
-      ) : null}
-
+      {loading ? <Text>Loading</Text> : null}
       {message ? (
         <Text
           style={{
@@ -73,7 +70,11 @@ export default function History() {
           {message}
         </Text>
       ) : null}
-      {data ? (
+      {data?.length < 1 ? (
+        <Text style={{ fontSize: 16, fontWeight: "500", marginVertical: "5%" }}>
+          No available history
+        </Text>
+      ) : (
         <FlatList
           contentContainerStyle={{
             marginVertical: "2%",
@@ -86,7 +87,7 @@ export default function History() {
             </View>
           )}
         />
-      ) : null}
+      )}
     </View>
   );
 }

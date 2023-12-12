@@ -3,7 +3,7 @@ import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export type ride = {
-  matricNumber?: string;
+  phone?: string;
   location: string | any;
   price: number;
   createdAt: string;

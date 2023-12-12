@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 interface payment {
-  matricNumber: string;
+  phone: string;
   event: string;
   amount: string;
   transactionRef: {
@@ -18,14 +18,14 @@ interface payment {
 
 export interface Ipayment extends payment {
   createUser: (body: payment) => any;
-  find: (matricNumber: string) => any;
-  findOneAndUpdate: (matricNumber: string) => any;
+  find: (phone: string) => any;
+  findOneAndUpdate: (phone: string) => any;
 }
 
 // interface TransactionDocument extends Document, Transaction {}
 
 const paymentSchema = new Schema<Ipayment>({
-  matricNumber: {
+  phone: {
     type: String,
     required: true,
     trim: true,
@@ -49,12 +49,12 @@ const paymentSchema = new Schema<Ipayment>({
 paymentSchema.methods.createUser = async function (body: payment) {
   return await this.create(body);
 };
-paymentSchema.methods.find = async function (matricNumber: string) {
-  return await this.find({ matricNumber });
+paymentSchema.methods.find = async function (phone: string) {
+  return await this.find({ phone });
 };
-// paymentSchema.methods.findOneAndUpdate = async function (matricNumber: string,price:string) {
+// paymentSchema.methods.findOneAndUpdate = async function (phone: string,price:string) {
 //   return await this.findOneAndUpdate(
-//     {matricNumber },
+//     {phone },
 //     body,
 //     { new: true, runValidators: true }
 //   );

@@ -20,12 +20,17 @@ const fetcher = async (
     if (!data) {
       setMessage("No data available, An error occured, Try again");
     }
-    if (data?.type == "error" || data?.success == "error") {
+    if (
+      data?.type == "error" ||
+      data?.success == "error" ||
+      data.sucess === false
+    ) {
       setMessage(data.message);
     }
-    if (data) {
+    if (data && data.sucess) {
       console.log("hi", data);
       setData(data);
+      return data;
     }
   } catch (error) {
     setMessage("An error occured, Try again");
